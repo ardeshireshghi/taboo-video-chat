@@ -3,9 +3,9 @@ import { User } from '../domain/User';
 
 export async function registerUser({ email, name }) {
   try {
-    const response = await fetch('http://localhost:8000/api/v1/user', {
+    const response = await fetch('http://localhost:8001/api/v1/user', {
       method: 'POST',
-      data: JSON.stringify({ email, name }),
+      body: JSON.stringify({ email, name }),
       headers: {
         'content-type': 'application/json'
       }
