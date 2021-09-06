@@ -17,6 +17,7 @@ import { useHistory } from 'react-router-dom';
 
 import { CenteredContainer } from '../components/shared/CenteredContainer';
 import { useCallback } from 'react';
+import { DefaultCard } from '../components/shared/DefaultCard';
 
 export default function ChooseTopic() {
   const [isTopicChosen, setTopicChosen] = useState(false);
@@ -41,10 +42,10 @@ export default function ChooseTopic() {
     <CenteredContainer>
       {!isTopicChosen && (
         <Row>
-          <Col sm={{ size: 6, order: 2, offset: 3 }}>
-            <Card>
+          <Col sm={{ size: 12 }}>
+            <DefaultCard>
               <CardBody>
-                <CardTitle>Choose a topic</CardTitle>
+                <CardTitle size="lg">Choose a topic</CardTitle>
                 <FormGroup>
                   <FormInput
                     id="#topic"
@@ -65,7 +66,7 @@ export default function ChooseTopic() {
                   </Button>
                 </FormGroup>
               </CardBody>
-            </Card>
+            </DefaultCard>
           </Col>
         </Row>
       )}

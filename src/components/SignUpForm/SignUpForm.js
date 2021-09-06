@@ -38,6 +38,7 @@ export default function SignUpForm({ onSubmit }) {
               <FormInput
                 onBlur={onBlur}
                 onChange={onChange}
+                size="lg"
                 value={value}
                 name={name}
                 id={`#${name}`}
@@ -69,6 +70,7 @@ export default function SignUpForm({ onSubmit }) {
                 <FormInput
                   onBlur={onBlur}
                   onChange={onChange}
+                  size="lg"
                   value={value}
                   name={name}
                   id={`#${name}`}
@@ -91,6 +93,7 @@ export default function SignUpForm({ onSubmit }) {
       </FormGroup>
       <FormGroup>
         <ButtonWithLoading
+          size="lg"
           block
           pill
           type="submit"

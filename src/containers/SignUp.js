@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardTitle, CardBody, Row, Col, Alert } from 'shards-react';
+import { CardTitle, CardBody, Row, Col, Alert } from 'shards-react';
 
 import { useHistory } from 'react-router-dom';
 
@@ -8,6 +8,7 @@ import { CenteredContainer } from '../components/shared/CenteredContainer';
 import { useSignUp } from '../hooks/useSignUp';
 import { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { DefaultCard } from '../components/shared/DefaultCard';
 
 export default function SignUp() {
   let history = useHistory();
@@ -28,13 +29,10 @@ export default function SignUp() {
   return (
     <CenteredContainer>
       <Row>
-        <Col
-          sm={{ size: 6, order: 2, offset: 3 }}
-          lg={{ size: 4, order: 2, offset: 4 }}
-        >
-          <Card>
+        <Col sm={{ size: 12, order: 2, offset: 0 }}>
+          <DefaultCard>
             <CardBody>
-              <CardTitle>Sign up for Taboo</CardTitle>
+              <CardTitle size="lg">Sign up for Taboo</CardTitle>
               <SignUpForm onSubmit={handleSubmit} />
               {error && (
                 <Alert theme="danger">
@@ -42,7 +40,7 @@ export default function SignUp() {
                 </Alert>
               )}
             </CardBody>
-          </Card>
+          </DefaultCard>
         </Col>
       </Row>
     </CenteredContainer>

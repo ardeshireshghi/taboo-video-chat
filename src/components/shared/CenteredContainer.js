@@ -8,7 +8,7 @@ export const CenteredContainer = styled(Container)`
   flex-wrap: wrap;
   height: 100%;
 
-  *:first-child {
-    flex: 1;
+  > *:first-child {
+    flex-basis: auto;
   }
 `;
