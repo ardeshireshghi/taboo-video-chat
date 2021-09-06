@@ -7,10 +7,12 @@ import { SignUpForm } from '../components/SignUpForm';
 import { CenteredContainer } from '../components/shared/CenteredContainer';
 import { useSignUp } from '../hooks/useSignUp';
 import { useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 export default function SignUp() {
   let history = useHistory();
   const { user, submit, error } = useSignUp();
+  const { setToken } = useAuth();
 
   const handleSubmit = (formData) => {
     submit(formData);
@@ -18,9 +20,10 @@ export default function SignUp() {
 
   useEffect(() => {
     if (user) {
+      setToken(user.accessToken);
       history.push('/choose-topic');
     }
-  }, [user, history]);
+  }, [user, history, setToken]);
 
   return (
     <CenteredContainer>
