@@ -1,6 +1,6 @@
 export async function loginWithEmail({ email }) {
   try {
-    const response = await fetch('http://localhost:8001/api/v1/email-login', {
+    const response = await fetch('http://localhost:8001/api/v1/magic-login', {
       method: 'POST',
       body: JSON.stringify({ email }),
       headers: {
