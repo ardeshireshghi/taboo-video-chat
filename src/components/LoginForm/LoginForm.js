@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, FormInput, FormGroup } from 'shards-react';
 import { Controller, useForm } from 'react-hook-form';
 import { ButtonWithLoading } from '../shared/ButtonWithLoading';
@@ -10,7 +10,7 @@ const ErrorMessage = styled.div`
   font-size: 0.9rem;
 `;
 
-export default function LoginForm({ onSubmit }) {
+export default function LoginForm({ onSubmit, submitted = false }) {
   const { control, handleSubmit } = useForm();
   const [submitting, setSubmitting] = useState(false);
 
@@ -18,6 +18,12 @@ export default function LoginForm({ onSubmit }) {
     setSubmitting(true);
     onSubmit(data);
   };
+
+  useEffect(() => {
+    if (submitted) {
+      setSubmitting(false);
+    }
+  }, [setSubmitting, submitted]);
 
   return (
     <Form onSubmit={handleSubmit(submitHandler)}>

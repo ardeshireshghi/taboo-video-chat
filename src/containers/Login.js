@@ -20,7 +20,10 @@ export default function Login() {
           <DefaultCard>
             <CardBody>
               <CardTitle size="lg">Login with email</CardTitle>
-              <LoginForm onSubmit={handleSubmit} />
+              <LoginForm
+                onSubmit={handleSubmit}
+                submitted={status !== 'pending'}
+              />
 
               {error && (
                 <Alert theme="danger">
@@ -28,7 +31,7 @@ export default function Login() {
                 </Alert>
               )}
               {status === 'success' && (
-                <Alert theme="success">
+                <Alert theme="primary">
                   An email with the login link has been sent
                 </Alert>
               )}
