@@ -1,7 +1,7 @@
 import React from 'react';
 import { CardTitle, CardBody, Row, Col, Alert } from 'shards-react';
 
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
 import { SignUpForm } from '../components/SignUpForm';
 import { CenteredContainer } from '../components/shared/CenteredContainer';
@@ -9,6 +9,12 @@ import { useSignUp } from '../hooks/useSignUp';
 import { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { DefaultCard } from '../components/shared/DefaultCard';
+import styled from 'styled-components';
+
+const SignUpLoginContainer = styled.div`
+  text-align: center;
+  lineheight: 2rem;
+`;
 
 export default function SignUp() {
   let history = useHistory();
@@ -34,6 +40,11 @@ export default function SignUp() {
             <CardBody>
               <CardTitle size="lg">Sign up for Taboo</CardTitle>
               <SignUpForm onSubmit={handleSubmit} />
+              <SignUpLoginContainer>
+                or <br />
+                <Link to="/login">Log in</Link>
+              </SignUpLoginContainer>
+
               {error && (
                 <Alert theme="danger">
                   There was a problem signing you up. Please try later

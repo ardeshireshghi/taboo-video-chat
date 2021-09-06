@@ -5,7 +5,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
   useHistory
 } from 'react-router-dom';
 import { MainHeader } from '../components/MainHeader/MainHeader';
@@ -14,6 +13,7 @@ import { useAuth } from '../context/AuthContext';
 import { ProtectedRoute } from './ProtectedRoute';
 
 const SignUp = lazy(() => import('../containers/SignUp'));
+const Login = lazy(() => import('../containers/Login'));
 const ChooseTopic = lazy(() => import('../containers/ChooseTopic'));
 const VideoChat = lazy(() => import('../containers/VideoChat'));
 
@@ -37,6 +37,9 @@ export const AppRouter = () => {
       <Switch>
         <Route path="/signup">
           <SignUp />
+        </Route>
+        <Route path="/login">
+          <Login />
         </Route>
         <ProtectedRoute path="/choose-topic">
           <ChooseTopic />

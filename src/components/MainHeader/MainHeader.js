@@ -50,6 +50,16 @@ export const MainHeader = ({ isLoggedIn = false }) => {
       </LogoLink>
       <Nav>
         <NavList>
+          {!isLoggedIn && (
+            <>
+              <NavItem>
+                <Link to="/login">Login</Link>
+              </NavItem>
+              <NavItem>
+                <Link to="/signup">Sign up</Link>
+              </NavItem>
+            </>
+          )}
           {isLoggedIn && (
             <NavItem>
               <Link to="/logout">Logout</Link>
