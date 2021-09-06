@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useMemo } from 'react';
 import { useContext } from 'react';
 import { createContext } from 'react';
 import { Auth } from '../services/Auth';
@@ -7,21 +8,29 @@ const AuthContext = createContext();
 const authService = new Auth();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
 
-  const authContextValue = {
-    setToken(token) {
-      authService.setToken(token);
-      setUser(authService.user);
-    },
-    getToken() {
-      return authService.token;
-    },
-    isAuthenticated() {
-      return authService.isAuthenticated();
-    },
-    user
-  };
+  const authContextValue = useMemo(
+    () => ({
+      setToken(token) {
+        authService.setToken(token);
+        setUser(authService.user);
+      },
+      getToken() {
+        return authService.token;
+      },
+      isAuthenticated() {
+        console.log('isAuthenticated?', authService.isAuthenticated());
+        return authService.isAuthenticated();
+      },
+      logout() {
+        authService.logout();
+        setUser(authService.user);
+      },
+      user
+    }),
+    [user, setUser]
+  );
 
   return (
     <AuthContext.Provider value={authContextValue}>
