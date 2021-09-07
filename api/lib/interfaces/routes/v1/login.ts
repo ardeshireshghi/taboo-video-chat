@@ -19,4 +19,23 @@ router.post(
   }
 );
 
+router.get(
+  '/login',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = await loginController.loginWithToken(req);
+      if (user) {
+        res.json(user);
+      } else {
+        next(new ApiError('login token is invalid/expired or not found', 422));
+      }
+
+      next();
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+);
+
 export default router;

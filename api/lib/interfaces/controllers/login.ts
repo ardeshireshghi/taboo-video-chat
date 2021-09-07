@@ -25,6 +25,26 @@ const controller = {
         throw err;
       }
     }
+  },
+  async loginWithToken(req: Request) {
+    if (!req.query.email) {
+      throw new ApiError('email query param is missing', 422);
+    }
+
+    if (!req.query.loginToken) {
+      const err = new ApiError('invalid or no loginToken', 422);
+      throw err;
+    }
+
+    const maybeUser = await verifyLoginToken(
+      {
+        email: req.query.email as string,
+        token: req.query.loginToken as string
+      },
+      services
+    );
+
+    return maybeUser;
   }
 };
 
