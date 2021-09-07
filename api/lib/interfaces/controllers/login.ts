@@ -3,7 +3,8 @@ import {
   sendLoginLink as sendLink,
   UserNotFoundError
 } from '../../application/useCases/sendLoginLink';
-import { ApiError } from '../../domain/Error';
+import { verifyLoginToken } from '../../application/useCases/verifyLoginToken';
+import { ApiError } from '../../domain/errors/ApiError';
 import { default as services } from '../../infrastructure/service-locator';
 
 const controller = {

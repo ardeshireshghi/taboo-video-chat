@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { registerUser as register } from '../../application/useCases/registerUser';
-import { ApiError } from '../../domain/Error';
+import { ApiError } from '../../domain/errors/ApiError';
 import { default as services } from '../../infrastructure/service-locator';
 
 const controller = {

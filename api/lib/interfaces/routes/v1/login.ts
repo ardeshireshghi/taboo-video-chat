@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
+import { ApiError } from '../../../domain/errors/ApiError';
 
 import { default as loginController } from '../../controllers/login';
 
