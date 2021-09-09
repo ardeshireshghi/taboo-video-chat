@@ -14,6 +14,7 @@ import { ProtectedRoute } from './ProtectedRoute';
 
 const SignUp = lazy(() => import('../containers/SignUp'));
 const Login = lazy(() => import('../containers/Login'));
+const MagicLogin = lazy(() => import('../containers/MagicLogin'));
 const ChooseTopic = lazy(() => import('../containers/ChooseTopic'));
 const VideoChat = lazy(() => import('../containers/VideoChat'));
 
@@ -40,6 +41,9 @@ export const AppRouter = () => {
         </Route>
         <Route path="/login">
           <Login />
+        </Route>
+        <Route path="/magic-login">
+          <MagicLogin />
         </Route>
         <ProtectedRoute path="/choose-topic">
           <ChooseTopic />

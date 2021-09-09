@@ -28,7 +28,7 @@ export default function SignUp() {
   useEffect(() => {
     if (user) {
       setToken(user.accessToken);
-      history.push('/choose-topic');
+      history.push('/');
     }
   }, [user, history, setToken]);
 

@@ -1,3 +1,9 @@
+export const colorTokens = {
+  green: '#17c671',
+  red: '#c4183c'
+};
+
 export const semanticColorTokens = {
-  signupErrorMessage: '#c4183c'
+  primary: colorTokens.green,
+  signupErrorMessage: colorTokens.red
 };
