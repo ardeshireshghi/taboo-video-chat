@@ -4,11 +4,9 @@ export enum StorageType {
   Memory = 'memory'
 }
 
-interface StoreBase {
-  ttlSeconds: number;
-}
+interface StoreBase {}
 
-type StoreValue<T> = { data: T; createdAt: string };
+type StoreValue<T> = { data: T; ttlSeconds?: number; createdAt: string };
 
 export class MemoryStorage<TStore extends StoreBase>
   implements Storage<TStore>
@@ -22,8 +20,11 @@ export class MemoryStorage<TStore extends StoreBase>
     return this.store.has(key);
   }
 
-  set(key: string, value: TStore): void {
+  set(key: string, value: TStore, ttlSeconds?: number): void {
+    const ttl = ttlSeconds ?? -1;
+
     this.store.set(key, {
+      ttlSeconds: ttl,
       createdAt: new Date().toISOString(),
       data: value
     });
@@ -45,10 +46,13 @@ export class MemoryStorage<TStore extends StoreBase>
   }
 
   private isExpired(value: StoreValue<TStore>) {
-    return (
-      Math.floor(Date.parse(value.createdAt) / 1000) + value.data.ttlSeconds >
-      Date.now()
-    );
+    const ttl = value.ttlSeconds ?? -1;
+
+    if (ttl === -1) {
+      return false;
+    }
+
+    return Math.floor(Date.parse(value.createdAt) / 1000) + ttl > Date.now();
   }
 }
 

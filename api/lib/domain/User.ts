@@ -3,6 +3,7 @@ export interface User {
   name: string;
   email: string;
   token: string;
+  loginToken?: string;
 }
 
 export class DefaultUser implements User {
@@ -10,6 +11,7 @@ export class DefaultUser implements User {
     public id: string,
     public name: string,
     public email: string,
-    public token: string
+    public token: string,
+    public loginToken?: string
   ) {}
 }
