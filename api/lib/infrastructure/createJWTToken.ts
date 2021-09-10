@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import getConfig from './config';
 
+// We create this token for both jitsi and the api so bit of a hack
 export function createJWTToken({ id, email, name }, expirySeconds = 7200) {
   const payload = {
     aud: 'jitsi',

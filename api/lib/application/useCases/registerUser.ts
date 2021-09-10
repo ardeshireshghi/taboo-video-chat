@@ -18,6 +18,9 @@ export async function registerUser(
     return;
   }
 
+  // We don't store the JWT in the storage
+  // But we return it as part of the user domain so
+  // the client app can use it for signing later requests
   const accessToken = createJWTToken({
     id: userId,
     email,
