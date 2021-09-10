@@ -20,9 +20,10 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
+    "setup": "./scripts/setup-local.sh",
     "start": "NODE_ENV=development runtime-env-cra --config-name=./public/runtime-env.js && react-scripts start",
     "start:secure": "HTTPS=true yarn start",
-    "build": "react-scripts build",
+    "build": "runtime-env-cra && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
