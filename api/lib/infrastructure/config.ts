@@ -17,7 +17,8 @@ function getConfig() {
     redis: {
       host: process.env.REDIS_HOST,
       port: Number(process.env.REDIS_PORT)
-    }
+    },
+    jitsiAppId: process.env.JITSI_VIDEO_APP_ID
   };
 
   return config;

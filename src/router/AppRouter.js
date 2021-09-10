@@ -23,7 +23,7 @@ const Logout = () => {
   const history = useHistory();
   useEffect(() => {
     logout();
-    history.push('/');
+    window.location.reload();
   }, [logout, history]);
 
   return null;

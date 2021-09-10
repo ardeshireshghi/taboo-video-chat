@@ -27,7 +27,9 @@ export const AuthProvider = ({ children }) => {
         authService.logout();
         setUser(authService.user);
       },
-      user
+      getUser() {
+        return user ?? authService.user;
+      }
     }),
     [user, setUser]
   );
