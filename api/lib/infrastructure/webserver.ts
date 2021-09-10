@@ -11,11 +11,6 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// app.post('/ardi', (req, res, next) => {
-//   res.end('OK');
-//   next();
-// });
-
 app.use('/', router);
 app.use(errorHandler);
 
