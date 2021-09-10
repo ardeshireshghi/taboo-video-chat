@@ -1,4 +1,5 @@
 import { EmailNotification } from '../../domain/gateways/EmailNotification';
+import { User } from '../../domain/User';
 import getConfig from '../../infrastructure/config';
 import { createHash } from '../../infrastructure/createHash';
 import { Services } from '../../infrastructure/service-locator';
@@ -10,14 +11,14 @@ export class UserNotFoundError {
 }
 
 function createLoginLinkNotification(user: any): EmailNotification {
-  const linkUrl = new URL(`http://${getConfig().webAppUrl}/api/v1/login`);
+  const linkUrl = new URL(`${getConfig().webAppUrl}/magic-login`);
   linkUrl.searchParams.set('email', user.email);
   linkUrl.searchParams.set('loginToken', user.loginToken);
 
   return {
     from: { email: 'ardieshghi@pepisandbox.com', name: 'ardieshghi' },
     subject: 'Taboo Login link',
-    content: `Hello ${user.name}, Please click on the link below to login: 
+    content: `Hello ${user.name}, Please click on the link below to login: \n 
         ${linkUrl.toString()}
         `,
     to: { email: user.email, name: user.name }
@@ -36,20 +37,24 @@ export async function sendLoginLink(
   const { email } = userData;
   const userId = createHash(email);
 
-  if (!userStore.exists(userId)) {
+  if (!(await userStore.exists(userId))) {
     throw new UserNotFoundError(
       `Cannot create link for non-existing email: ${email}`
     );
   }
 
-  const user = userStore.get(userId);
+  const user = await userStore.get(userId);
 
-  const userWithLoginToken = {
-    ...user,
-    loginToken: uuid()
-  };
+  if (user) {
+    const userWithLoginToken: User = {
+      ...user,
+      loginToken: uuid()
+    };
 
-  await emailNotification.send(createLoginLinkNotification(userWithLoginToken));
+    await emailNotification.send(
+      createLoginLinkNotification(userWithLoginToken)
+    );
 
-  userStore.set(userId, userWithLoginToken);
+    await userStore.set(userId, userWithLoginToken);
+  }
 }

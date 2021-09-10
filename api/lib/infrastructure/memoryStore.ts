@@ -12,11 +12,11 @@ export class MemoryStorage<TStore extends StoreBase>
     private store: Map<string, StoreValue<TStore>> = new Map()
   ) {}
 
-  exists(key: string): boolean {
-    return this.store.has(key);
+  exists(key: string): Promise<boolean> {
+    return Promise.resolve(this.store.has(key));
   }
 
-  set(key: string, value: TStore, ttlSeconds?: number): void {
+  set(key: string, value: TStore, ttlSeconds?: number): Promise<void> {
     const ttl = ttlSeconds ?? -1;
 
     this.store.set(key, {
@@ -24,21 +24,23 @@ export class MemoryStorage<TStore extends StoreBase>
       createdAt: new Date().toISOString(),
       data: value
     });
+
+    return Promise.resolve();
   }
 
-  get(key: string): TStore | undefined {
+  get(key: string): Promise<TStore | undefined> {
     const value = this.store.get(key);
 
     if (value && this.isExpired(value)) {
       this.store.delete(key);
-      return undefined;
+      return Promise.resolve(undefined);
     }
 
-    return value?.data;
+    return Promise.resolve(value?.data);
   }
 
-  keys() {
-    return Array.from(this.store.keys());
+  keys(): Promise<string[] | undefined> {
+    return Promise.resolve(Array.from(this.store.keys()));
   }
 
   private isExpired(value: StoreValue<TStore>) {

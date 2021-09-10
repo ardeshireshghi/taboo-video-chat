@@ -12,12 +12,12 @@ export async function verifyLoginToken(
   const { email, token } = params;
   const userId = createHash(email);
 
-  if (!userStore.exists(userId)) {
+  if (!(await userStore.exists(userId))) {
     console.log(`verifyLoginToken - user with email ${email} does not exist`);
     return;
   }
 
-  const user = userStore.get(userId);
+  const user = await userStore.get(userId);
 
   if (!user.loginToken || token !== user.loginToken) {
     console.log(
@@ -31,9 +31,9 @@ export async function verifyLoginToken(
       name: user.name
     });
 
-    userStore.set(userId, {
+    await userStore.set(userId, {
       ...user,
-      loginToken: null
+      loginToken: ''
     });
 
     return new DefaultUser(userId, user.name, user.email, accessToken);
