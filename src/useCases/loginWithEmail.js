@@ -1,6 +1,14 @@
+import { getConfig } from '../infrastructure/config';
+
 export async function loginWithEmail({ email }) {
   try {
-    const response = await fetch('http://localhost:8001/api/v1/magic-login', {
+    const config = getConfig();
+
+    if (!config.apiBaseUrl) {
+      throw new Error('apiBaseUrl is not set in config');
+    }
+
+    const response = await fetch(`${config.apiBaseUrl}/api/v1/magic-login`, {
       method: 'POST',
       body: JSON.stringify({ email }),
       headers: {

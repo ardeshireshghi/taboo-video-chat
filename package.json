@@ -14,12 +14,13 @@
     "react-router-dom": "^5.2.1",
     "react-scripts": "4.0.3",
     "react-useanimations": "^2.0.6",
+    "runtime-env-cra": "^0.2.4",
     "shards-react": "^1.0.3",
     "styled-components": "^5.3.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "NODE_ENV=development runtime-env-cra --config-name=./public/runtime-env.js && react-scripts start",
     "start:secure": "HTTPS=true yarn start",
     "build": "react-scripts build",
     "test": "react-scripts test",

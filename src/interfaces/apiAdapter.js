@@ -1,4 +1,5 @@
 import { ApiUser } from '../domain/api/User';
+import { getConfig } from '../infrastructure/config';
 
 const apiUserFromResponse = async (response) =>
   new ApiUser(await response.json());
@@ -15,8 +16,13 @@ function createRequestInit(data, method = 'POST') {
 
 export async function login({ email, loginToken }) {
   try {
+    const config = getConfig();
+
+    if (!config.apiBaseUrl) {
+      throw new Error('apiBaseUrl is not set in config');
+    }
     const response = await fetch(
-      'http://localhost:8001/api/v1/login',
+      `${config.apiBaseUrl}/api/v1/login`,
       createRequestInit({ email, loginToken })
     );
 
