@@ -1,9 +1,5 @@
 import { Storage } from '../domain/Storage';
 
-export enum StorageType {
-  Memory = 'memory'
-}
-
 interface StoreBase {}
 
 type StoreValue<T> = { data: T; ttlSeconds?: number; createdAt: string };
@@ -54,15 +50,4 @@ export class MemoryStorage<TStore extends StoreBase>
 
     return Math.floor(Date.parse(value.createdAt) / 1000) + ttl > Date.now();
   }
-}
-
-export function createStore<TStore extends StoreBase>(
-  storeType: StorageType,
-  name: string
-): Storage<TStore> {
-  if (storeType === StorageType.Memory) {
-    return new MemoryStorage<TStore>(name);
-  }
-
-  throw new Error(`Invalid storeType ${storeType}`);
 }

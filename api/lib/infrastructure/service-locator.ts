@@ -1,11 +1,11 @@
 import { EmailNotificationGateway } from '../domain/gateways/EmailNotification';
-import { Storage } from '../domain/Storage';
+import { Storage, StorageType } from '../domain/Storage';
 import { User } from '../domain/User';
 import { createEmailNotificationGateway } from '../interfaces/gateways/emailNotification';
 
 import getConfig from './config';
 import { EmailMailer } from './mailer';
-import { createStore, StorageType } from './memoryStore';
+import { createStore } from './createStore';
 
 const { urlCacheStoreType } = getConfig();
 
