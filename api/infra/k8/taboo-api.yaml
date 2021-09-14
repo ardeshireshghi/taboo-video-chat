@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taboo-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: taboo-api
+  template:
+    metadata:
+      labels:
+        app: taboo-api
+    spec:
+      nodeSelector:
+        'kubernetes.io/os': linux
+      containers:
+        - name: taboo-api
+          image: tabooappregistry.azurecr.io/taboo-api:latest
+          env:
+            - name: ALLOW_EMPTY_PASSWORD
+              value: 'yes'
+            - name: SERVICE_PORT
+              value: '8080'
+            - name: URL_CACHE_STORE_TYPE
+              value: memory
+
+            - name: JWT_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: taboo-api-secrets-{{envName}}
+                  key: jwt-private-key
+            - name: MAILER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: taboo-api-secrets-{{envName}}
+                  key: mailer-api-key
+            - name: WEB_APP_URL
+              value: https://localhost:3000
+
+            - name: JITSI_VIDEO_APP_ID
+              value: vpaas-magic-cookie-15ba2c1858914be4913bfa73a6d28bc2
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 250m
+              memory: 512Mi
+          ports:
+            - containerPort: 8080
+              name: app
+      imagePullSecrets:
+        - name: taboo-acr-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: taboo-api
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: taboo-api

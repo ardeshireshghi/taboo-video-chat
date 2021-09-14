@@ -1,1 +1,1 @@
-window.__RUNTIME_CONFIG__ = {"REACT_APP_API_URL":"http://localhost:8001"};
+window.__RUNTIME_CONFIG__ = {"REACT_APP_API_URL":"https://taboo-api-dev.uksouth.cloudapp.azure.com"};
