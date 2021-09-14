@@ -17,14 +17,18 @@ spec:
       containers:
         - name: taboo-api
           image: tabooappregistry.azurecr.io/taboo-api:latest
+          imagePullPolicy: Always
           env:
             - name: ALLOW_EMPTY_PASSWORD
               value: 'yes'
             - name: SERVICE_PORT
               value: '8080'
-            - name: URL_CACHE_STORE_TYPE
-              value: memory
-
+            - name: CACHE_STORE_TYPE
+              value: redis
+            - name: REDIS_LEADER_HOST
+              value: redis-leader
+            - name: REDIS_FOLLOWER_HOST
+              value: redis-follower
             - name: JWT_PRIVATE_KEY
               valueFrom:
                 secretKeyRef:
@@ -63,3 +67,34 @@ spec:
       targetPort: 8080
   selector:
     app: taboo-api
+---
+# SOURCE: https://cloud.google.com/kubernetes-engine/docs/tutorials/guestbook
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-leader
+  labels:
+    app: redis
+    role: leader
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+        role: leader
+        tier: backend
+    spec:
+      containers:
+        - name: leader
+          image: 'docker.io/redis:6.0.5'
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          ports:
+            - containerPort: 6379

@@ -50,25 +50,28 @@ function createAsyncRedisClient(
 export class RedisStorage<TStore extends object> implements Storage<TStore> {
   constructor(
     private name: string,
-    private client: AsyncRedisClient = createAsyncRedisClient({
-      host: redisConfig.host
+    private readClient: AsyncRedisClient = createAsyncRedisClient({
+      host: redisConfig.read.host
+    }),
+    private writeClient: AsyncRedisClient = createAsyncRedisClient({
+      host: redisConfig.write.host
     })
   ) {}
 
   async exists(key: string): Promise<boolean> {
-    const result = await this.client.exists(this.fullKey(key));
+    const result = await this.readClient.exists(this.fullKey(key));
 
     return result === 1;
   }
 
   async set(key: string, value: TStore, ttlSeconds?: number): Promise<void> {
     const ttl = ttlSeconds ?? -1;
-    await this.client.hmset(this.fullKey(key), valueToRedisMap(value));
-    await this.client.expire(key, ttl);
+    await this.writeClient.hmset(this.fullKey(key), valueToRedisMap(value));
+    await this.writeClient.expire(key, ttl);
   }
 
   async get(key: string): Promise<TStore | undefined> {
-    const data = await this.client.hgetall(this.fullKey(key));
+    const data = await this.readClient.hgetall(this.fullKey(key));
     if (!data) {
       return undefined;
     }
@@ -77,7 +80,7 @@ export class RedisStorage<TStore extends object> implements Storage<TStore> {
   }
 
   async keys(): Promise<string[] | undefined> {
-    const keys = await this.client.keys(`${this.name}_*`);
+    const keys = await this.readClient.keys(`${this.name}_*`);
     if (!keys) {
       return undefined;
     }
