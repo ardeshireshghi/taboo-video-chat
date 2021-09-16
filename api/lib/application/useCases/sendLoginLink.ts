@@ -1,3 +1,4 @@
+import { ApiError } from '../../domain/errors/ApiError';
 import { EmailNotification } from '../../domain/gateways/EmailNotification';
 import { User } from '../../domain/User';
 import getConfig from '../../infrastructure/config';
@@ -51,10 +52,15 @@ export async function sendLoginLink(
       loginToken: uuid()
     };
 
-    await emailNotification.send(
-      createLoginLinkNotification(userWithLoginToken)
-    );
-
     await userStore.set(userId, userWithLoginToken);
+
+    try {
+      await emailNotification.send(
+        createLoginLinkNotification(userWithLoginToken)
+      );
+    } catch (err) {
+      console.log(err);
+      throw new ApiError('Error sending email notification with login link');
+    }
   }
 }
