@@ -3,7 +3,7 @@ let config = {};
 
 export function getConfig() {
   if (!(CONFIG_GLOBAL_KEY in window)) {
-    return {};
+    return config;
   }
 
   if (Object.keys(config).length === 0) {
