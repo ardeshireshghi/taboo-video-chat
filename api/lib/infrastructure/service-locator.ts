@@ -9,6 +9,7 @@ import { createStore } from './createStore';
 import { Chat } from '../domain/Chat';
 import { Topic } from '../domain/Topic';
 import { StoreValueRedisType } from './redisStore';
+import { RedisPubSub } from './pubSub';
 
 const { cacheStoreType } = getConfig();
 
@@ -21,6 +22,7 @@ export interface Services {
   chatStore: Storage<Chat>;
   userChatStore: Storage<any>;
   emailNotification: EmailNotificationGateway;
+  pubsub: RedisPubSub;
 }
 
 export function buildServices(): Services {
@@ -77,7 +79,8 @@ export function buildServices(): Services {
 
     emailNotification: createEmailNotificationGateway({
       mailer: new EmailMailer()
-    })
+    }),
+    pubsub: new RedisPubSub()
   };
 }
 
