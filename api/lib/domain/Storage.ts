@@ -1,9 +1,10 @@
 export interface Storage<T> {
-  exists(key: string): boolean | Promise<boolean>;
+  exists(key: string, value?: string): boolean | Promise<boolean>;
   set(key: string, value: T, ttlSeconds?: number): void;
   get(key: string): T | undefined | Promise<T | undefined>;
   keys(): string[] | Promise<string[] | undefined>;
-  getLastFromList?(key: string): Promise<void>;
+  getFromBeginningOfList?(key: string, start: number, stop: number);
+  removeListFirstItem?(key: string): Promise<any>;
 }
 
 export enum StorageType {

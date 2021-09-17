@@ -30,11 +30,13 @@ type AsyncRedisClient = {
   }>;
   sadd(...otherArgs: any[]): Promise<any>;
   zadd(...otherArgs: any[]): Promise<any>;
-  lpush(key: string, ...otherArgs: any[]): Promise<any>;
+  rpush(key: string, ...otherArgs: any[]): Promise<any>;
   lpop(key: string): Promise<any>;
+  lrange(key: string, start: number, stop: number): Promise<any>;
   set(key: string, value: string): Promise<any>;
   keys(pattern: string): Promise<string[]>;
   expire(key: string, seconds: number): Promise<number>;
+  sismember(key: string, value: string): Promise<number>;
 };
 
 function createAsyncRedisClient(
@@ -54,9 +56,11 @@ function createAsyncRedisClient(
     expire: promisify(client.expire.bind(client)),
     sadd: promisify(client.sadd.bind(client)),
     zadd: promisify(client.zadd.bind(client)),
-    lpush: promisify(client.lpush.bind(client)),
+    rpush: promisify(client.rpush.bind(client)),
+    lrange: promisify(client.lrange.bind(client)),
     lpop: promisify(client.lpop.bind(client)),
     set: promisify(client.set.bind(client)),
+    sismember: promisify(client.sismember.bind(client)),
     hmset
   };
 }
@@ -86,8 +90,14 @@ export class RedisStorage<TStore extends object> implements Storage<TStore> {
     })
   ) {}
 
-  async exists(key: string): Promise<boolean> {
-    const result = await this.readClient.exists(this.fullKey(key));
+  async exists(key: string, value?: string): Promise<boolean> {
+    let result;
+
+    if (this.storeValueRedisType === StoreValueRedisType.RedisSet && value) {
+      result = this.readClient.sismember(this.fullKey(key), value);
+    } else {
+      result = await this.readClient.exists(this.fullKey(key));
+    }
 
     return result === 1;
   }
@@ -101,12 +111,20 @@ export class RedisStorage<TStore extends object> implements Storage<TStore> {
     await this.writeClient.expire(key, ttl);
   }
 
-  async getLastFromList(key: string): Promise<any> {
+  async getFromBeginningOfList(
+    key: string,
+    start: number,
+    stop: number
+  ): Promise<any> {
+    return await this.readClient.lrange(this.fullKey(key), start, stop);
+  }
+
+  async removeListFirstItem(key: string): Promise<any> {
     return await this.readClient.lpop(this.fullKey(key));
   }
 
   private async appendToSet(key: string, values: any[]): Promise<void> {
-    await this.writeClient.sadd([key, ...values]);
+    await this.writeClient.sadd(key, ...values);
   }
 
   private async appendToOrderedSet(
@@ -117,7 +135,7 @@ export class RedisStorage<TStore extends object> implements Storage<TStore> {
   }
 
   private async appendToList(key: string, value: any): Promise<void> {
-    await this.writeClient.lpush(key, value);
+    await this.writeClient.rpush(key, value);
   }
 
   private async setHashMap(key: string, value: TStore): Promise<void> {

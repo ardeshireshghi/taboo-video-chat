@@ -2,8 +2,10 @@ import { Chat } from '../../domain/Chat';
 import { Services } from '../../infrastructure/service-locator';
 import { uuid } from '../../infrastructure/uuid';
 
+type ChatWithoutId = Omit<Chat, 'id'>;
+
 export async function createChat(
-  chat: Omit<Chat, 'id'>,
+  chat: ChatWithoutId,
   { chatStore, userChatStore }: Pick<Services, 'chatStore' | 'userChatStore'>
 ): Promise<any | undefined> {
   const chatId = uuid();
