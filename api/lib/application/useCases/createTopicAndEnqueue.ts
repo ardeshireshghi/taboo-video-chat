@@ -1,7 +1,8 @@
-import { Chat } from '../../domain/Chat';
 import { Topic } from '../../domain/Topic';
 import { createHash } from '../../infrastructure/createHash';
+import { RedisPublisher } from '../../infrastructure/pubSub';
 import { Services } from '../../infrastructure/service-locator';
+import { EventTopics } from '../../interfaces/events/topics';
 
 async function enqueueTopic(
   topic: { id: string; name: string },
@@ -21,7 +22,7 @@ async function enqueueTopic(
   await stores.topicQueueStore.set(topic.id, queueItemId);
 }
 
-type TopicWithOptionalChat = Topic & { chat: Omit<Chat, 'id'> | undefined };
+let topicUpdatedPublisher: RedisPublisher;
 
 export async function createTopicAndEnqueue(
   data: {
@@ -32,79 +33,50 @@ export async function createTopicAndEnqueue(
     topicStore,
     topicUsersStore,
     topicQueueStore,
-    topicQueueItemStore
+    topicQueueItemStore,
+
+    pubsub
   }: Pick<
     Services,
-    'topicStore' | 'topicUsersStore' | 'topicQueueStore' | 'topicQueueItemStore'
+    | 'topicStore'
+    | 'topicUsersStore'
+    | 'topicQueueStore'
+    | 'topicQueueItemStore'
+    | 'pubsub'
   >
-): Promise<TopicWithOptionalChat> {
+): Promise<Topic> {
   const { userId, name } = data;
   const topicId = createHash(name);
 
-  // Add the topic to topic store
-  await topicStore.set(topicId, {
+  topicUpdatedPublisher = topicUpdatedPublisher ?? pubsub.publisher();
+
+  const topic = {
     id: topicId,
     name
-  });
+  };
 
-  // This is for now just for writing and keeping track of all the users for
-  // a given topic
+  // Add the topic to topic store
+  await topicStore.set(topicId, topic);
+
+  // Add user to the set of users following the topic
   await topicUsersStore.set?.(topicId, [userId]);
 
-  // Check if someone else has already queued for the topic
-  const lastQueuedItemIdForTopic = await topicQueueStore.getLastFromList?.(
-    topicId
-  );
+  // Add topic to queue storages
+  await enqueueTopic(topic, userId, {
+    topicQueueStore,
+    topicQueueItemStore
+  });
 
-  let chat;
-
-  if (!lastQueuedItemIdForTopic) {
-    const topic = {
-      id: topicId,
-      name
-    };
-    await enqueueTopic(topic, userId, {
-      topicQueueStore,
-      topicQueueItemStore
-    });
-  } else {
-    // Get the queued item (it will be expired in 24 hours)
-    const lastQueuedItem = await topicQueueItemStore.get(
-      lastQueuedItemIdForTopic
-    );
-
-    // If there is another user queued since the this user is active we
-    // don't need to enqueue this user and rather return `otherUserIdQueuedForTopic`
-    // to client to redirect to the topic meeting page
-    // This assumes that the other user is online
-    // TODO: notify other user via email that they can join the meeting (for now log them in and join the chat page)
-    if (lastQueuedItem.userId && lastQueuedItem.userId !== userId) {
-      // TODO: this should at this point publish event topic.user_pairs.selected
-      chat = {
-        topic: {
-          id: topicId,
-          name
-        },
-        users: [userId, lastQueuedItem.userId]
-      };
-    } else {
-      await enqueueTopic(
-        {
-          id: topicId,
-          name
-        },
-        userId,
-        {
-          topicQueueStore,
-          topicQueueItemStore
-        }
-      );
+  console.log('Publishing topicUpdatedEvent for topic with id', topic.id);
+  topicUpdatedPublisher.publish({
+    topic: EventTopics.TopicUpdated,
+    message: {
+      value: topic.id
     }
-  }
+  });
 
   return {
     id: topicId,
-    name,
-    chat
+    name
   };
 }
