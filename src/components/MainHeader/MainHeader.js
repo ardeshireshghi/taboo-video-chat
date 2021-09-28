@@ -6,7 +6,9 @@ const Logo = styled.div`
   font-family: Helvetica, Arial, sans-serif;
   font-weight: 900;
   color: #f44336;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.08), 0 2px 2px rgba(0, 0, 0, 0.08),
+    0 3px 3px rgba(0, 0, 0, 0.08), 0 4px 4px rgba(0, 0, 0, 0.08),
+    0 8px 8px rgba(0, 0, 0, 0.08), 0 16px 16px rgba(0, 0, 0, 0.08);
   font-style: initial;
   letter-spacing: -2px;
 `;
@@ -23,6 +25,9 @@ const HeaderContainer = styled.header`
 
 const LogoLink = styled(Link)`
   text-decoration: none;
+  &:hover {
+    text-decoration: none;
+  }
 `;
 
 const Nav = styled.nav`
@@ -45,7 +50,7 @@ const NavItem = styled.li`
 export const MainHeader = ({ isLoggedIn = false }) => {
   return (
     <HeaderContainer>
-      <LogoLink to="/">
+      <LogoLink to="/" alt="Taboo chat app" title="Taboo chat app">
         <Logo>Taboo</Logo>
       </LogoLink>
       <Nav>
