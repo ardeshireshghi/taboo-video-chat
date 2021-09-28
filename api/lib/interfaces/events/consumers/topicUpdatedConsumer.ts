@@ -25,7 +25,7 @@ async function getNextTopicQueueItem(
 }
 
 class TopicUpdatedConsumer extends BaseConsumer {
-  constructor() {
+  constructor(public chatTopicMatchFoundPublisher = pubsub.publisher()) {
     super(EventTopics.TopicUpdated, pubsub.subscriber());
   }
 
@@ -47,6 +47,7 @@ class TopicUpdatedConsumer extends BaseConsumer {
       1
     );
 
+    // When there are not enough items in the queue
     if (nextTwotopicQueueItems.length < 2) {
       console.log('Not enough queue items in the topic to create a chat');
       return;
@@ -62,27 +63,28 @@ class TopicUpdatedConsumer extends BaseConsumer {
 
     while (true) {
       if (firstQueueItem && nextQueueItem) {
+        // Two valid queue items with different user ids
         if (firstQueueItem.userId !== nextQueueItem.userId) {
           shouldCreateChat = true;
           break;
-        } else {
-          const nextTopicQueueItem = await getNextTopicQueueItem(
-            topicId,
-            nextQueueItemIndex,
-            { topicQueueStore, topicQueueItemStore }
-          );
-
-          queueItemCache.push(nextTopicQueueItem);
-
-          if (!nextTopicQueueItem) {
-            shouldCreateChat = false;
-            break;
-          } else {
-            nextQueueItem = nextTopicQueueItem;
-            nextQueueItemIndex += 1;
-            continue;
-          }
         }
+
+        const nextTopicQueueItem = await getNextTopicQueueItem(
+          topicId,
+          nextQueueItemIndex,
+          { topicQueueStore, topicQueueItemStore }
+        );
+
+        queueItemCache.push(nextTopicQueueItem);
+
+        // if there is no next item in the queue we are done
+        if (!nextTopicQueueItem) {
+          break;
+        }
+
+        nextQueueItem = nextTopicQueueItem;
+        nextQueueItemIndex += 1;
+        continue;
       } else if (!firstQueueItem && nextQueueItem) {
         firstQueueItem = nextQueueItem;
 
@@ -95,16 +97,12 @@ class TopicUpdatedConsumer extends BaseConsumer {
         queueItemCache.push(nextTopicQueueItem);
 
         if (!nextTopicQueueItem) {
-          shouldCreateChat = false;
           break;
-        } else {
-          nextQueueItem = nextTopicQueueItem;
-          nextQueueItemIndex += 1;
-          continue;
         }
-      } else if (!firstQueueItem && !nextQueueItem) {
-        shouldCreateChat = false;
-        break;
+
+        nextQueueItem = nextTopicQueueItem;
+        nextQueueItemIndex += 1;
+        continue;
       }
     }
 
@@ -114,18 +112,19 @@ class TopicUpdatedConsumer extends BaseConsumer {
         await topicQueueStore.removeListFirstItem?.(topicId);
       }
 
-      const chat = await createChat(
-        {
-          topic: {
-            id: topicId,
-            name: firstQueueItem.name
-          },
-          users: [firstQueueItem.userId, nextQueueItem.userId]
-        },
-        { chatStore: services.chatStore, userChatStore: services.userChatStore }
-      );
-
-      console.log('Boom new video chat created', chat);
+      console.log('Publishing chatTopicMatchFound for topic', topicId);
+      this.chatTopicMatchFoundPublisher.publish({
+        topic: EventTopics.ChatTopicMatchFound,
+        message: {
+          value: {
+            topic: {
+              id: topicId,
+              name: firstQueueItem.name
+            },
+            userIds: [firstQueueItem.userId, nextQueueItem.userId]
+          }
+        }
+      });
     }
   }
 }

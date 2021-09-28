@@ -1,3 +1,4 @@
 export enum EventTopics {
-  TopicUpdated = 'topic.updated'
+  TopicUpdated = 'topic.updated',
+  ChatTopicMatchFound = 'chat.topic.match.found'
 }
