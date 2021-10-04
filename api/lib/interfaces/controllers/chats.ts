@@ -6,8 +6,11 @@ import services from '../../infrastructure/service-locator';
 
 const controller = {
   async getUserChats(req: Request) {
-    if (!req.params.userId) {
-      const err = new ApiError(' `userId` for chat is not set', 422);
+    const reqWithAuth = req as any;
+    const userId = reqWithAuth.auth.context.user.id;
+
+    if (!userId) {
+      const err = new ApiError('`userId` is not defined on auth token', 422);
       throw err;
     }
 
