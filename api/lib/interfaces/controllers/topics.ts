@@ -6,7 +6,9 @@ import services from '../../infrastructure/service-locator';
 
 const controller = {
   async createOrUpdateTopic(req: Request) {
-    if (!req.body.name || !req.body.userId) {
+    const reqWithAuth = req as any;
+    const userId = reqWithAuth.auth.context.user.id;
+    if (!req.body.name || !userId) {
       const err = new ApiError(
         '`name` field or `userId` for topic is not set',
         422
@@ -16,7 +18,7 @@ const controller = {
 
     // TODO: Pass just the necessary services
     const result = await createTopicAndEnqueue(
-      { name: req.body.name, userId: req.body.userId },
+      { name: req.body.name, userId: userId },
       services
     );
 
