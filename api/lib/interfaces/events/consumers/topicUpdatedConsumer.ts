@@ -1,4 +1,3 @@
-import { createChat } from '../../../application/useCases/createChat';
 import { PubSubMessage } from '../../../domain/interfaces/pubsub/PubSubMessage';
 import services from '../../../infrastructure/service-locator';
 import { EventTopics } from '../topics';

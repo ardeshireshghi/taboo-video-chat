@@ -7,4 +7,6 @@ export interface Chat {
   id: string;
   topic: Topic;
   users: UserId[];
+  createdAt?: string;
+  updatedAt?: string;
 }

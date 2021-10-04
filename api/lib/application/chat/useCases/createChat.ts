@@ -1,6 +1,7 @@
-import { Chat } from '../../domain/Chat';
-import { Services } from '../../infrastructure/service-locator';
-import { uuid } from '../../infrastructure/uuid';
+import { Chat } from '../../../domain/Chat';
+import { Services } from '../../../infrastructure/service-locator';
+import { uuid } from '../../../infrastructure/uuid';
+import { CHAT_TTL } from './constants';
 
 type ChatWithoutId = Omit<Chat, 'id'>;
 
@@ -15,7 +16,7 @@ export async function createChat(
     id: chatId
   };
 
-  await chatStore.set(chatId, chatWithId, 24 * 3600);
+  await chatStore.set(chatId, chatWithId, CHAT_TTL);
 
   // Add chatIds to users in the chat
   await Promise.all([

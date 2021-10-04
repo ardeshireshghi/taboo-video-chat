@@ -1,4 +1,4 @@
-import { createChat } from '../../../application/useCases/createChat';
+import { createChat } from '../../../application/chat/useCases/createChat';
 import { PubSubMessage } from '../../../domain/interfaces/pubsub/PubSubMessage';
 import { Topic } from '../../../domain/Topic';
 import services from '../../../infrastructure/service-locator';
@@ -26,7 +26,9 @@ class ChatTopicMatchFoundConsumer extends BaseConsumer {
     const chat = await createChat(
       {
         topic,
-        users: userIds
+        users: userIds,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       },
       { chatStore: services.chatStore, userChatStore: services.userChatStore }
     );

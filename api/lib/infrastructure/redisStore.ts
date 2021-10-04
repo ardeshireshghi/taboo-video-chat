@@ -33,6 +33,7 @@ type AsyncRedisClient = {
   rpush(key: string, ...otherArgs: any[]): Promise<any>;
   lpop(key: string): Promise<any>;
   lrange(key: string, start: number, stop: number): Promise<any>;
+  zrangebyscore(...args): Promise<any>;
   set(key: string, value: string): Promise<any>;
   keys(pattern: string): Promise<string[]>;
   expire(key: string, seconds: number): Promise<number>;
@@ -58,6 +59,7 @@ function createAsyncRedisClient(
     zadd: promisify(client.zadd.bind(client)),
     rpush: promisify(client.rpush.bind(client)),
     lrange: promisify(client.lrange.bind(client)),
+    zrangebyscore: promisify(client.zrangebyscore.bind(client)),
     lpop: promisify(client.lpop.bind(client)),
     set: promisify(client.set.bind(client)),
     sismember: promisify(client.sismember.bind(client)),
@@ -77,6 +79,11 @@ const storeValueTypeToSetter = {
   [StoreValueRedisType.RedisSet]: 'appendToSet',
   [StoreValueRedisType.RedisOrderedSet]: 'appendToOrderedSet',
   [StoreValueRedisType.RedisList]: 'appendToList'
+};
+
+const storeValueToGetter = {
+  [StoreValueRedisType.RedisHashMap]: 'getHashMap',
+  [StoreValueRedisType.RedisOrderedSet]: 'getFromOrderedSet'
 };
 export class RedisStorage<TStore extends object> implements Storage<TStore> {
   constructor(
@@ -142,13 +149,29 @@ export class RedisStorage<TStore extends object> implements Storage<TStore> {
     await this.writeClient.hmset(key, valueToRedisMap(value));
   }
 
-  async get(key: string): Promise<TStore | undefined> {
-    const data = await this.readClient.hgetall(this.fullKey(key));
+  async get(key: string, extraParams?: any): Promise<TStore | undefined> {
+    const getterMethod = storeValueToGetter[this.storeValueRedisType];
+
+    const data = await this[getterMethod](this.fullKey(key), extraParams);
+
     if (!data) {
       return undefined;
     }
 
     return data as TStore;
+  }
+
+  async getHashMap(key: string) {
+    return await this.readClient.hgetall(key);
+  }
+
+  async getFromOrderedSet(key: string, scores: { min: number; max: number }) {
+    return await this.readClient.zrangebyscore([
+      key,
+      scores.min,
+      scores.max,
+      'WITHSCORES'
+    ]);
   }
 
   async keys(): Promise<string[] | undefined> {
