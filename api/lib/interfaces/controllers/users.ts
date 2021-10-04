@@ -15,6 +15,10 @@ const controller = {
       services
     );
 
+    if (!user) {
+      throw new ApiError('user already exists', 409);
+    }
+
     return user;
   }
 };
