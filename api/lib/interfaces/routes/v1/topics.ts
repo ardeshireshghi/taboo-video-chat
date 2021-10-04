@@ -3,16 +3,13 @@ import jwt from 'express-jwt';
 import getConfig from '../../../infrastructure/config';
 
 import topicController from '../../controllers/topics';
+import { authorizer } from '../../middlewares/auth';
 
 const router = express.Router();
 
 router.post(
   '/topic',
-  jwt({
-    secret: getConfig().jwtPublicKey,
-    algorithms: ['RS256'],
-    requestProperty: 'auth'
-  }),
+  authorizer(),
   async (req: Request, res: Response, next: NextFunction) => {
     const reqWithAuth = req as any;
     try {
