@@ -1,4 +1,5 @@
 import { createChat } from '../../../application/chat/useCases/createChat';
+import { ChatState } from '../../../domain/Chat';
 import { PubSubMessage } from '../../../domain/interfaces/pubsub/PubSubMessage';
 import { Topic } from '../../../domain/Topic';
 import services from '../../../infrastructure/service-locator';
@@ -27,6 +28,7 @@ class ChatTopicMatchFoundConsumer extends BaseConsumer {
       {
         topic,
         users: userIds,
+        state: ChatState.Pending,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       },

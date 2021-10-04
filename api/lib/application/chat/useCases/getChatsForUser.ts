@@ -1,4 +1,4 @@
-import { Chat } from '../../../domain/Chat';
+import { Chat, ChatState } from '../../../domain/Chat';
 import { Services } from '../../../infrastructure/service-locator';
 import { CHAT_TTL } from './constants';
 
@@ -24,6 +24,7 @@ export async function getUserChats(
   await Promise.all(
     Object.keys(chats).map(async (chatId) => {
       const rawChat = await chatStore.get(chatId);
+
       if (rawChat) {
         const parsedChat = {
           id: rawChat?.id,
@@ -36,7 +37,8 @@ export async function getUserChats(
               ? JSON.parse(rawChat?.users)
               : rawChat?.users,
           createdAt: rawChat.createdAt,
-          updatedAt: rawChat.updatedAt
+          updatedAt: rawChat.updatedAt,
+          state: rawChat.state || ChatState.Pending
         };
 
         chats[chatId] = {
