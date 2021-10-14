@@ -14,7 +14,7 @@ const controller = {
       throw err;
     }
 
-    const result = await getUserChatsUseCase(req.params.userId, services);
+    const result = await getUserChatsUseCase(userId, services);
 
     return result;
   }

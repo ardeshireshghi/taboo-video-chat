@@ -1,6 +1,4 @@
 import express, { Request, Response, NextFunction } from 'express';
-import jwt from 'express-jwt';
-import getConfig from '../../../infrastructure/config';
 
 import topicController from '../../controllers/topics';
 import { authorizer } from '../../middlewares/auth';

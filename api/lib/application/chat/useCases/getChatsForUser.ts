@@ -51,5 +51,10 @@ export async function getUserChats(
     })
   );
 
-  return Object.values(chats);
+  const chatListUnsorted = Object.values(chats) as Chat[];
+
+  // Return sorted by last created
+  return chatListUnsorted.sort((a, b) => {
+    return a.createdAt! > b.createdAt! ? -1 : 1;
+  });
 }
