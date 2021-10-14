@@ -19,7 +19,7 @@ export default function VideoChatContainer() {
       <Row>
         <Col sm={{ size: 12, order: 2 }}>
           <VideoChat
-            roomName={chatId}
+            roomName={chatId.replace(/-/g, '')}
             displayName={user.context.user.name}
             token={tokenValue}
           />

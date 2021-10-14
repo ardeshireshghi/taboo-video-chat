@@ -8,7 +8,10 @@ export function getConfig() {
 
   if (Object.keys(config).length === 0) {
     config = {
-      apiBaseUrl: window[CONFIG_GLOBAL_KEY].REACT_APP_API_URL
+      apiBaseUrl: window[CONFIG_GLOBAL_KEY].REACT_APP_API_URL,
+      chatPollIntervalSeconds:
+        window[CONFIG_GLOBAL_KEY].CHAT_POLL_INTERVAL || 10,
+      chatPollingTimeSeconds: 300
     };
 
     delete window[CONFIG_GLOBAL_KEY];
