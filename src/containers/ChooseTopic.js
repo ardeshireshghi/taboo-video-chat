@@ -1,80 +1,48 @@
-import React, { useMemo, useState } from 'react';
-import {
-  CardTitle,
-  CardBody,
-  Row,
-  Col,
-  FormGroup,
-  FormInput,
-  Button,
-  Modal,
-  ModalBody,
-  ModalHeader
-} from 'shards-react';
-
-import { useHistory } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Modal, ModalBody, ModalHeader } from 'shards-react';
 
 import { CenteredContainer } from '../components/shared/CenteredContainer';
 import { useCallback } from 'react';
-import { DefaultCard } from '../components/shared/DefaultCard';
+import { useCreateTopic } from '../hooks/useCreateTopic';
+
+import { ChooseTopicForm, LoadingSandClock } from '../components/ChooseTopic';
 
 export default function ChooseTopic() {
-  const [isTopicChosen, setTopicChosen] = useState(false);
-  const [topic, setTopic] = useState('');
-  let history = useHistory();
+  const { error, loading, create, topic } = useCreateTopic();
 
-  const gotoChatPage = useCallback(
-    () => history.push(`/chat/${topic}`),
-    [history, topic]
+  const handleChooseTopicSubmit = useCallback(
+    (topicName) => {
+      create({ name: topicName });
+    },
+    [create]
   );
-  const showChatPage = useMemo(() => Math.random() >= 0.5, []);
 
-  const handleTopicChosenClick = useCallback(() => {
-    if (!topic) {
-      return;
-    }
-
-    showChatPage ? gotoChatPage() : setTopicChosen(true);
-  }, [topic, showChatPage, gotoChatPage, setTopicChosen]);
+  useEffect(() => {
+    // TODO: Handle polling for user chats here
+  }, [topic]);
 
   return (
-    <CenteredContainer>
-      {!isTopicChosen && (
-        <Row>
-          <Col sm={{ size: 12 }}>
-            <DefaultCard>
-              <CardBody>
-                <CardTitle size="lg">Choose a topic</CardTitle>
-                <FormGroup>
-                  <FormInput
-                    id="#topic"
-                    size="lg"
-                    value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                    placeholder="e.g Love"
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Button
-                    pill
-                    size="lg"
-                    onClick={handleTopicChosenClick}
-                    theme="success"
-                  >
-                    Confirm
-                  </Button>
-                </FormGroup>
-              </CardBody>
-            </DefaultCard>
-          </Col>
-        </Row>
+    <>
+      {!topic && (
+        <ChooseTopicForm
+          onSubmit={handleChooseTopicSubmit}
+          submitStatus={loading ? 'submitting' : error ? 'error' : 'pending'}
+        />
       )}
-      {isTopicChosen && (
-        <Modal centered open={true}>
-          <ModalHeader>Thanks</ModalHeader>
-          <ModalBody>🙏 We will notify you once we find a match</ModalBody>
-        </Modal>
+
+      {topic && (
+        <CenteredContainer>
+          <LoadingSandClock />
+          <Modal centered open={true}>
+            <ModalHeader>Thanks</ModalHeader>
+            <ModalBody>
+              🙏 Please wait while we find a person with interest in{' '}
+              <strong>"{topic.name}"</strong>. If it takes more than 5 minutes,
+              we will notify you once we find one.
+            </ModalBody>
+          </Modal>
+        </CenteredContainer>
       )}
-    </CenteredContainer>
+    </>
   );
 }

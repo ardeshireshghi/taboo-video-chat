@@ -13,7 +13,7 @@ import styled from 'styled-components';
 
 const SignUpLoginContainer = styled.div`
   text-align: center;
-  lineheight: 2rem;
+  line-height: 2rem;
 `;
 
 export default function SignUp() {

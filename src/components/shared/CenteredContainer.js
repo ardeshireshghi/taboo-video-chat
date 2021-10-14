@@ -6,7 +6,7 @@ export const CenteredContainer = styled(Container)`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  height: 100%;
+  min-height: calc(100% - 92px);
 
   > *:first-child {
     flex-basis: auto;
