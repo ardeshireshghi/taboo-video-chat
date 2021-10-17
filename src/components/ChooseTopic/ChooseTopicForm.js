@@ -9,7 +9,6 @@ import {
   Alert
 } from 'shards-react';
 
-import { CenteredContainer } from '../shared/CenteredContainer';
 import { useCallback } from 'react';
 import { DefaultCard } from '../shared/DefaultCard';
 import { ButtonWithLoading } from '../shared/ButtonWithLoading';
@@ -26,7 +25,7 @@ export default function ChooseTopicForm({ submitStatus, onSubmit = () => {} }) {
   }, [topicName, onSubmit]);
 
   return (
-    <CenteredContainer>
+    <>
       <Row>
         <Col sm={{ size: 12 }}>
           <DefaultCard>
@@ -56,12 +55,12 @@ export default function ChooseTopicForm({ submitStatus, onSubmit = () => {} }) {
           </DefaultCard>
         </Col>
       </Row>
-      )
+
       {submitStatus === 'error' && (
         <Alert theme="danger">
           There was a problem creating a new topic. Please try later
         </Alert>
       )}
-    </CenteredContainer>
+    </>
   );
 }

@@ -5,6 +5,8 @@ export const CenteredContainer = styled(Container)`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  gap: 1rem;
   flex-wrap: wrap;
   min-height: calc(100% - 92px);
 

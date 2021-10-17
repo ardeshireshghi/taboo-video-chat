@@ -1,6 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Modal, ModalBody, ModalHeader } from 'shards-react';
+import {
+  Modal,
+  ModalBody,
+  ModalHeader,
+  CardBody,
+  CardTitle,
+  ListGroup,
+  ListGroupItem,
+  Button
+} from 'shards-react';
 
+import { DefaultCard } from '../components/shared/DefaultCard';
 import { CenteredContainer } from '../components/shared/CenteredContainer';
 import { useCallback } from 'react';
 import { useCreateTopic } from '../hooks/useCreateTopic';
@@ -9,7 +19,14 @@ import { ChooseTopicForm, LoadingSandClock } from '../components/ChooseTopic';
 import { useUserChat } from '../hooks/useUserChat';
 import { getConfig } from '../infrastructure/config';
 import { ChatState } from '../domain/Chat';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+const ListGroupItemStyled = styled(ListGroupItem)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
 
 export default function ChooseTopic() {
   const history = useHistory();
@@ -60,7 +77,11 @@ export default function ChooseTopic() {
   }, [topic, chatPollInterval, pollChatWithTimeout, getChats]);
 
   useEffect(() => {
-    if (userChats.length) {
+    getChats();
+  }, [getChats]);
+
+  useEffect(() => {
+    if (userChats.length && topic) {
       const firstPendingChatWithSameTopic = userChats.find(
         (chat) =>
           chat.state === ChatState.Pending && chat.topic.name === topic.name
@@ -73,16 +94,36 @@ export default function ChooseTopic() {
   }, [userChats, history, topic]);
 
   return (
-    <>
+    <CenteredContainer>
       {!topic && (
         <ChooseTopicForm
           onSubmit={handleChooseTopicSubmit}
           submitStatus={loading ? 'submitting' : error ? 'error' : 'pending'}
         />
       )}
+      {userChats.length && !topic && (
+        <DefaultCard>
+          <CardBody>
+            <CardTitle>Active chats with matched topics</CardTitle>
+            <ListGroup>
+              {userChats.map((chat) => (
+                <ListGroupItemStyled key={chat.id}>
+                  {chat.topic.name}
+
+                  <Link to={`/chat/${chat.id}`}>
+                    <Button outline pill size="sm">
+                      Go to chat
+                    </Button>
+                  </Link>
+                </ListGroupItemStyled>
+              ))}
+            </ListGroup>
+          </CardBody>
+        </DefaultCard>
+      )}
 
       {topic && (
-        <CenteredContainer>
+        <>
           {!pollingMaxAttemptsReached && <LoadingSandClock />}
           <Modal centered open={true} toggle={() => {}}>
             {!pollingMaxAttemptsReached && (
@@ -104,8 +145,8 @@ export default function ChooseTopic() {
               </>
             )}
           </Modal>
-        </CenteredContainer>
+        </>
       )}
-    </>
+    </CenteredContainer>
   );
 }
