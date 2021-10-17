@@ -82,13 +82,13 @@ export default function ChooseTopic() {
 
   useEffect(() => {
     if (userChats.length && topic) {
-      const firstPendingChatWithSameTopic = userChats.find(
+      const firstNonFullfilledChatWithSameTopic = userChats.find(
         (chat) =>
-          chat.state === ChatState.Pending && chat.topic.name === topic.name
+          chat.state !== ChatState.Fullfilled && chat.topic.name === topic.name
       );
 
-      if (firstPendingChatWithSameTopic) {
-        history.push(`/chat/${firstPendingChatWithSameTopic.id}`);
+      if (firstNonFullfilledChatWithSameTopic) {
+        history.push(`/chat/${firstNonFullfilledChatWithSameTopic.id}`);
       }
     }
   }, [userChats, history, topic]);
@@ -101,7 +101,7 @@ export default function ChooseTopic() {
           submitStatus={loading ? 'submitting' : error ? 'error' : 'pending'}
         />
       )}
-      {userChats.length && !topic && (
+      {userChats.length > 0 && !topic && (
         <DefaultCard>
           <CardBody>
             <CardTitle>Active chats with matched topics</CardTitle>
