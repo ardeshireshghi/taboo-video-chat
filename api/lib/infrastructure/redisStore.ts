@@ -127,7 +127,7 @@ export class RedisStorage<TStore extends object> implements Storage<TStore> {
   }
 
   async removeListFirstItem(key: string): Promise<any> {
-    return await this.readClient.lpop(this.fullKey(key));
+    return await this.writeClient.lpop(this.fullKey(key));
   }
 
   private async appendToSet(key: string, values: any[]): Promise<void> {
