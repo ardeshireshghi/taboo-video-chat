@@ -15,4 +15,5 @@ export interface Chat {
   state: ChatState;
   createdAt?: string;
   updatedAt?: string;
+  joinedUsers?: Record<UserId, { lastJoinedAt: string }>;
 }

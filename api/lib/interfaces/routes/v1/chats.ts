@@ -22,4 +22,21 @@ router.get(
   }
 );
 
+router.put(
+  '/chat/:chatId',
+  authorizer(),
+  async (req: Request, res: Response, next: NextFunction) => {
+    const reqWithAuth = req as any;
+
+    try {
+      const response = await chatsController.updateChat(reqWithAuth);
+      res.json(response);
+      next();
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+);
+
 export default router;

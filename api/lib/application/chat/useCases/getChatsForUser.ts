@@ -1,4 +1,5 @@
 import { Chat, ChatState } from '../../../domain/Chat';
+
 import { Services } from '../../../infrastructure/service-locator';
 import { CHAT_TTL } from './constants';
 
@@ -38,6 +39,9 @@ export async function getUserChats(
               : rawChat?.users,
           createdAt: rawChat.createdAt,
           updatedAt: rawChat.updatedAt,
+          joinedUsers: rawChat.joinedUsers
+            ? JSON.parse(String(rawChat?.joinedUsers))
+            : {},
           state: rawChat.state || ChatState.Pending
         };
 
