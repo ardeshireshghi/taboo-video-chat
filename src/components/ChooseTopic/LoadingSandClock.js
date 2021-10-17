@@ -16,10 +16,11 @@ const fadeInAnimation = keyframes`
 const LoadingIconContainer = styled.div`
   width: 64px;
   height: 64px;
+  position: relative;
   margin: 0 auto;
-  padding: 6rem;
+  top: -200px;
   box-sizing: content-box;
-  align-self: flex-start;
+  justify-self: flex-start;
   opacity: 0;
   transform: scale(0);
   animation: ${fadeInAnimation} 0.5s 1 1s;
