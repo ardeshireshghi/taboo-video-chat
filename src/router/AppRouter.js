@@ -33,7 +33,7 @@ export const AppRouter = () => {
   const { isAuthenticated } = useAuth();
 
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <MainHeader isLoggedIn={isAuthenticated()} />
       <Switch>
         <Route path="/signup">
