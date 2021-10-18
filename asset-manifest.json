@@ -7,17 +7,17 @@
     "static/js/2.71335963.chunk.js": "/taboo-video-chat/static/js/2.71335963.chunk.js",
     "static/js/2.71335963.chunk.js.map": "/taboo-video-chat/static/js/2.71335963.chunk.js.map",
     "main.css": "/taboo-video-chat/static/css/main.bb0df2d6.chunk.css",
-    "main.js": "/taboo-video-chat/static/js/main.065931be.chunk.js",
-    "main.js.map": "/taboo-video-chat/static/js/main.065931be.chunk.js.map",
-    "runtime-main.js": "/taboo-video-chat/static/js/runtime-main.2112a86a.js",
-    "runtime-main.js.map": "/taboo-video-chat/static/js/runtime-main.2112a86a.js.map",
+    "main.js": "/taboo-video-chat/static/js/main.948df94a.chunk.js",
+    "main.js.map": "/taboo-video-chat/static/js/main.948df94a.chunk.js.map",
+    "runtime-main.js": "/taboo-video-chat/static/js/runtime-main.499049ac.js",
+    "runtime-main.js.map": "/taboo-video-chat/static/js/runtime-main.499049ac.js.map",
     "static/css/5.7afb6aac.chunk.css": "/taboo-video-chat/static/css/5.7afb6aac.chunk.css",
-    "static/js/5.0e64ae6c.chunk.js": "/taboo-video-chat/static/js/5.0e64ae6c.chunk.js",
-    "static/js/5.0e64ae6c.chunk.js.map": "/taboo-video-chat/static/js/5.0e64ae6c.chunk.js.map",
-    "static/js/6.69e49f87.chunk.js": "/taboo-video-chat/static/js/6.69e49f87.chunk.js",
-    "static/js/6.69e49f87.chunk.js.map": "/taboo-video-chat/static/js/6.69e49f87.chunk.js.map",
-    "static/js/7.f56a278d.chunk.js": "/taboo-video-chat/static/js/7.f56a278d.chunk.js",
-    "static/js/7.f56a278d.chunk.js.map": "/taboo-video-chat/static/js/7.f56a278d.chunk.js.map",
+    "static/js/5.ac74e83d.chunk.js": "/taboo-video-chat/static/js/5.ac74e83d.chunk.js",
+    "static/js/5.ac74e83d.chunk.js.map": "/taboo-video-chat/static/js/5.ac74e83d.chunk.js.map",
+    "static/js/6.74adae7e.chunk.js": "/taboo-video-chat/static/js/6.74adae7e.chunk.js",
+    "static/js/6.74adae7e.chunk.js.map": "/taboo-video-chat/static/js/6.74adae7e.chunk.js.map",
+    "static/js/7.a37c9117.chunk.js": "/taboo-video-chat/static/js/7.a37c9117.chunk.js",
+    "static/js/7.a37c9117.chunk.js.map": "/taboo-video-chat/static/js/7.a37c9117.chunk.js.map",
     "static/js/8.80c299ac.chunk.js": "/taboo-video-chat/static/js/8.80c299ac.chunk.js",
     "static/js/8.80c299ac.chunk.js.map": "/taboo-video-chat/static/js/8.80c299ac.chunk.js.map",
     "static/js/9.a7742289.chunk.js": "/taboo-video-chat/static/js/9.a7742289.chunk.js",
@@ -30,13 +30,13 @@
     "static/css/5.7afb6aac.chunk.css.map": "/taboo-video-chat/static/css/5.7afb6aac.chunk.css.map",
     "static/css/main.bb0df2d6.chunk.css.map": "/taboo-video-chat/static/css/main.bb0df2d6.chunk.css.map",
     "static/js/0.e1fa2d38.chunk.js.LICENSE.txt": "/taboo-video-chat/static/js/0.e1fa2d38.chunk.js.LICENSE.txt",
-    "static/js/5.0e64ae6c.chunk.js.LICENSE.txt": "/taboo-video-chat/static/js/5.0e64ae6c.chunk.js.LICENSE.txt"
+    "static/js/5.ac74e83d.chunk.js.LICENSE.txt": "/taboo-video-chat/static/js/5.ac74e83d.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.2112a86a.js",
+    "static/js/runtime-main.499049ac.js",
     "static/css/5.7afb6aac.chunk.css",
-    "static/js/5.0e64ae6c.chunk.js",
+    "static/js/5.ac74e83d.chunk.js",
     "static/css/main.bb0df2d6.chunk.css",
-    "static/js/main.065931be.chunk.js"
+    "static/js/main.948df94a.chunk.js"
   ]
 }
