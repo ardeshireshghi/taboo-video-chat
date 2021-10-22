@@ -1,0 +1,71 @@
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+# {"auths":{"tabooappregistry.azurecr.io":{"username":"bd1e22ad-a9ba-495a-a96f-3b450bb41380","password":"gxMC-a~4ecF34UqdEIKEvU~j~VL05r9zGD","auth":"YmQxZTIyYWQtYTliYS00OTVhLWE5NmYtM2I0NTBiYjQxMzgwOmd4TUMtYX40ZWNGMzRVcWRFSUtFdlV+an5WTDA1cjl6R0Q="}}}%
+
+name: Deploy Taboo API to dev environment
+on: [push]
+
+# Environment variables available to all jobs and steps in this workflow
+env:
+  REGISTRY_NAME: tabooappregistry
+  CLUSTER_NAME: taboo-dev-aks
+  CLUSTER_RESOURCE_GROUP: taboo-dev-aks-resources
+  NAMESPACE: default
+  SECRET: taboo-acr-secret
+  APP_NAME: taboo-api
+  WORKING_DIRECTORY: ./api
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+
+      # Connect to Azure Container Registry (ACR)
+      - uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.REGISTRY_NAME }}.azurecr.io
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      # Container build and push to a Azure Container Registry (ACR)
+      - run: |
+          docker build . -t ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.APP_NAME }}:${{ github.sha }}
+          docker push ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.APP_NAME }}:${{ github.sha }}
+        working-directory: ${{env.WORKING_DIRECTORY}}
+
+      # Set the target Azure Kubernetes Service (AKS) cluster.
+      - uses: azure/aks-set-context@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          cluster-name: ${{ env.CLUSTER_NAME }}
+          resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
+
+      # Deploy app to AKS
+      - run: |
+          apt-get update
+          apt-get -y install helm
+          ./infra/scripts/k8/deploy.sh dev
+        working-directory: ${{env.WORKING_DIRECTORY}}
+
+      # Create image pull secret for ACR
+      # - uses: azure/k8s-create-secret@v1
+      #   with:
+      #     container-registry-url: ${{ env.REGISTRY_NAME }}.azurecr.io
+      #     container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
+      #     container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+      #     secret-name: ${{ env.SECRET }}
+      #     namespace: ${{ env.NAMESPACE }}
+      #     force: true
+
+      # # Deploy app to AKS
+      # - uses: azure/k8s-deploy@v1
+      #   with:
+      #     manifests: |
+      #       manifests/deployment.yml
+      #       manifests/service.yml
+      #     images: |
+      #       ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.APP_NAME }}:${{ github.sha }}
+      #     imagepullsecrets: |
+      #       ${{ env.SECRET }}
+      #     namespace: ${{ env.NAMESPACE }}
