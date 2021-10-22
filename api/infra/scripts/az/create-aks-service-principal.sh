@@ -1,7 +1,7 @@
 #!/bin/bash
 # This script requires Azure CLI version 2.25.0 or later. Check version with `az --version`.
 
-kubectl get secret taboo-acr-secret && echo "Secret taboo-acr-secret already exists, exiting" && exit
+env="${1:-dev}"
 
 # Modify for your environment.
 # ACR_NAME: The name of your Azure Container Registry
@@ -18,7 +18,7 @@ ACR_REGISTRY_ID=$(az acr show --name "$ACR_NAME" --query id --output tsv)
 # acrpull:     pull only
 # acrpush:     push and pull
 # owner:       push, pull, and assign roles
-SP_PASSWD=$(az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME --scopes "$ACR_REGISTRY_ID" --role acrpull --query password --output tsv)
+SP_PASSWD=$(az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME --scopes "$ACR_REGISTRY_ID" --role contributor --query password --output tsv)
 SP_APP_ID=$(az ad sp list --display-name $SERVICE_PRINCIPAL_NAME --query [].appId --output tsv)
 
 # Output the service principal's credentials; use these in your services and
@@ -26,9 +26,10 @@ SP_APP_ID=$(az ad sp list --display-name $SERVICE_PRINCIPAL_NAME --query [].appI
 echo "Service principal ID: $SP_APP_ID"
 echo "Service principal password: $SP_PASSWD"
 
-echo "creating secret for azure container registry called 'taboo-acr-secret'"
+echo "creating secret for azure container registry called 'taboo-acr-secret-$env'"
 
-kubectl create secret docker-registry taboo-acr-secret \
+kubectl delete secret "taboo-acr-secret-$env" --ignore-not-found
+kubectl create secret docker-registry "taboo-acr-secret-$env" \
     --docker-server="$(echo "$ACR_NAME" | tr '[:upper:]' '[:lower:]')".azurecr.io \
     --docker-username="$SP_APP_ID" \
     --docker-password="$SP_PASSWD"

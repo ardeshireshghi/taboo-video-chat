@@ -60,7 +60,7 @@ spec:
             - containerPort: 8080
               name: app
       imagePullSecrets:
-        - name: taboo-acr-secret
+        - name: taboo-acr-secret-{{envName}}
 ---
 apiVersion: v1
 kind: Service

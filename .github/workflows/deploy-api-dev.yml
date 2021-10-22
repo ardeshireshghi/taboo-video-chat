@@ -11,7 +11,7 @@ env:
   CLUSTER_NAME: taboo-dev-aks
   CLUSTER_RESOURCE_GROUP: taboo-dev-aks-resources
   NAMESPACE: default
-  SECRET: taboo-acr-secret
+  SECRET: taboo-acr-secret-dev
   APP_NAME: taboo-api
   WORKING_DIRECTORY: ./api
 
