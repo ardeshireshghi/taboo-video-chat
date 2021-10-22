@@ -29,11 +29,13 @@ const Logout = () => {
   return null;
 };
 
+console.log(process.env.NODE_ENV);
+
 export const AppRouter = () => {
   const { isAuthenticated } = useAuth();
 
   return (
-    <Router basename={process.env.PUBLIC_URL}>
+    <Router>
       <MainHeader isLoggedIn={isAuthenticated()} />
       <Switch>
         <Route path="/signup">

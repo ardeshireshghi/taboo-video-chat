@@ -2,7 +2,6 @@
   "name": "taboo",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://ardeshireshghi.github.io/taboo-video-chat",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -24,7 +23,8 @@
     "setup": "./scripts/setup-local.sh",
     "start": "NODE_ENV=development runtime-env-cra --config-name=./public/runtime-env.js && react-scripts start",
     "start:secure": "HTTPS=true yarn start",
-    "build": "NODE_ENV=production runtime-env-cra --env-file=.env --config-name=./public/runtime-env.js && react-scripts build",
+    "build": "NODE_ENV=production runtime-env-cra --config-name=./public/runtime-env.js && react-scripts build",
+    "deploy": "./scripts/deploy-ui.sh",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -47,6 +47,7 @@
     ]
   },
   "devDependencies": {
+    "@cloudflare/wrangler": "^1.19.4",
     "gh-pages": "^3.2.3"
   }
 }

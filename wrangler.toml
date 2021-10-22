@@ -1,0 +1,24 @@
+name = "taboo-chat"
+account_id = "1a4c79c0c70ad1ed652598139ba058e2"
+
+type = "webpack"
+workers_dev = true
+
+# route = ""
+# zone_id = ""
+compatibility_date = "2021-10-20"
+
+[site]
+bucket = "./build"
+include = ["*"]
+
+[env.dev]
+
+[env.staging]
+
+[env.production]
+# The ID of the domain to deploying to
+zone_id = "614fdc6827bbdbc617a016531e1a3c83"
+
+# The route pattern your Workers application will be served at
+route = "e-ardi.online/*"
