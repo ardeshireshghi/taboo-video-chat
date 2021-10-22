@@ -5,8 +5,8 @@ name: Deploy Taboo UI to dev environment
 
 on:
   push:
-    branches: [ main ]
-  
+    branches: [main]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,8 +16,10 @@ jobs:
         with:
           node-version: 16
       - run: yarn install
+      - run: cp .env{.example,}
+      - run: sed -i ''  's#{{apiBaseUrl}}#https://taboo-api-dev.uksouth.cloudapp.azure.com#g' .env
       - run: yarn build
-        env: 
+        env:
           REACT_APP_API_URL: https://taboo-api-dev.uksouth.cloudapp.azure.com
 
   deploy:

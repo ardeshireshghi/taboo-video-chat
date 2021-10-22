@@ -13,12 +13,20 @@ bucket = "./build"
 include = ["*"]
 
 [env.dev]
+zone_id = "614fdc6827bbdbc617a016531e1a3c83"
+
+# The route pattern your Workers application will be served at
+route = "taboo-dev.e-ardi.online/*"
 
 [env.staging]
+zone_id = "614fdc6827bbdbc617a016531e1a3c83"
+
+# The route pattern your Workers application will be served at
+route = "taboo-staging.e-ardi.online/*"
 
 [env.production]
 # The ID of the domain to deploying to
 zone_id = "614fdc6827bbdbc617a016531e1a3c83"
 
 # The route pattern your Workers application will be served at
-route = "e-ardi.online/*"
+route = "taboo.e-ardi.online/*"

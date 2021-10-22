@@ -45,7 +45,7 @@ spec:
                   name: taboo-api-secrets-{{envName}}
                   key: mailer-api-key
             - name: WEB_APP_URL
-              value: https://localhost:3000
+              value: http://taboo-{{envName}}.e-ardi.online
 
             - name: JITSI_VIDEO_APP_ID
               value: vpaas-magic-cookie-15ba2c1858914be4913bfa73a6d28bc2
