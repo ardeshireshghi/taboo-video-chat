@@ -44,7 +44,9 @@ jobs:
       # Deploy app to AKS
       - run: |
           sudo apt-get update
-          sudo apt-get -y install helm
+          wget https://get.helm.sh/helm-v3.4.1-linux-amd64.tar.gz
+          tar xvf helm-v3.4.1-linux-amd64.tar.gz
+          sudo mv linux-amd64/helm /usr/local/bin
           ./infra/scripts/k8/deploy.sh dev
         working-directory: ${{env.WORKING_DIRECTORY}}
 
