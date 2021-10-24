@@ -2,5 +2,5 @@
 
 cd terraform || (echo "directory terraform not found" && exit 1)
 
-terraform init -reconfigure
+terraform init > /dev/null
 terraform output -json 
