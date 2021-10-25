@@ -47,7 +47,7 @@ jobs:
       ARM_SUBSCRIPTION_ID: d96839a3-b6cb-400b-a6dd-98ad7945677c
       ARM_TENANT_ID: 4e753554-316e-4e28-b21a-da085473cea1
     steps:
-      # Set the target Azure Kubernetes Service (AKS) cluster.
+      - uses: actions/checkout@main
       - uses: azure/aks-set-context@v1
         with:
           creds: ${{secrets.AZURE_CREDENTIALS}}
@@ -58,6 +58,9 @@ jobs:
       - name: Prepare deploy environment
         run: |
           sudo apt-get update
+          command -v helm || echo "helm found"
+          wget https://get.helm.sh/helm-v3.4.1-linux-amd64.tar.gz
+          tar xvf helm-v3.4.1-linux-amd64.tar.gz
 
         working-directory: ${{env.WORKING_DIRECTORY}}
 
