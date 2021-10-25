@@ -10,6 +10,7 @@ set -x
 
 load_balancer_ip="$(./scripts/output.sh | jq '.cluster_egress_ip.value' | sed s/\"//g)"
 env_name="${1:-dev}"
+api_image_tag_to_deploy="${2:-latest}"
 
 ./scripts/az/aks-get-credentials.sh "$env_name"
 
@@ -30,7 +31,7 @@ helm install ingress-nginx2 ingress-nginx/ingress-nginx \
 kubectl apply -f ./k8/redis.yaml
 
 # Deploy the deployment and service to run the pod
-cat < ./k8/taboo-api.yaml | sed "s/{{envName}}/$env_name/g" |  kubectl apply -f -
+cat < ./k8/taboo-api.yaml | sed -e "s/{{envName}}/$env_name/g" -e "s/{{imageVersionTag}}/$api_image_tag_to_deploy/g" |  kubectl apply -f -
 kubectl scale deploy/taboo-api --replicas=0
 sleep 5
 kubectl scale deploy/taboo-api --replicas=1

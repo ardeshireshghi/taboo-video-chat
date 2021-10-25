@@ -16,7 +16,7 @@ spec:
         'kubernetes.io/os': linux
       containers:
         - name: taboo-api
-          image: tabooappregistry.azurecr.io/taboo-api:latest
+          image: tabooappregistry.azurecr.io/taboo-api:{{imageVersionTag}}
           imagePullPolicy: Always
           env:
             - name: ALLOW_EMPTY_PASSWORD
