@@ -24,29 +24,41 @@ jobs:
       # Connect to Azure Container Registry (ACR)
       - uses: azure/docker-login@v1
         with:
-          login-server: ${{ env.REGISTRY_NAME }}.azurecr.io
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+          login-server: ${{env.REGISTRY_NAME}}.azurecr.io
+          username: ${{secrets.REGISTRY_USERNAME}}
+          password: ${{secrets.REGISTRY_PASSWORD}}
 
       # Container build and push to a Azure Container Registry (ACR)
       - run: |
           docker build . -t ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.APP_NAME }}:${{ github.sha }}
           docker push ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.APP_NAME }}:${{ github.sha }}
         working-directory: ${{env.WORKING_DIRECTORY}}
-
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: 07d58365-fc9b-4be3-b4cc-38e225e0148d
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: d96839a3-b6cb-400b-a6dd-98ad7945677c
+      ARM_TENANT_ID: 4e753554-316e-4e28-b21a-da085473cea1
+    steps:
       # Set the target Azure Kubernetes Service (AKS) cluster.
       - uses: azure/aks-set-context@v1
         with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
-          cluster-name: ${{ env.CLUSTER_NAME }}
-          resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+          cluster-name: ${{env.CLUSTER_NAME}}
+          resource-group: ${{env.CLUSTER_RESOURCE_GROUP}}
 
       # Deploy app to AKS
-      - run: |
+      - name: Prepare deploy environment
+        run: |
           sudo apt-get update
           wget https://get.helm.sh/helm-v3.4.1-linux-amd64.tar.gz
           tar xvf helm-v3.4.1-linux-amd64.tar.gz
           sudo mv linux-amd64/helm /usr/local/bin
+        working-directory: ${{env.WORKING_DIRECTORY}}
+
+      - name: Deploy API to dev
+        run: |
           ./infra/scripts/k8/deploy.sh dev
         working-directory: ${{env.WORKING_DIRECTORY}}
 
