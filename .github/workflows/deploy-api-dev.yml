@@ -58,9 +58,10 @@ jobs:
       - name: Prepare deploy environment
         run: |
           sudo apt-get update
+          command -v helm || echo "helm found"
           wget https://get.helm.sh/helm-v3.4.1-linux-amd64.tar.gz
           tar xvf helm-v3.4.1-linux-amd64.tar.gz
-          sudo mv linux-amd64/helm /usr/local/bin
+
         working-directory: ${{env.WORKING_DIRECTORY}}
 
       - name: Deploy API to dev
