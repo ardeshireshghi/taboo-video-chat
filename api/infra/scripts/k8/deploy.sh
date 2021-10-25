@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
+echo "Current dir: $PWD"
+
 cd infra || exit 1
+
+set -x
+
+./scripts/output.sh
 
 load_balancer_ip="$(./scripts/output.sh | jq '.cluster_egress_ip.value' | sed s/\"//g)"
 env_name="${1:-dev}"
