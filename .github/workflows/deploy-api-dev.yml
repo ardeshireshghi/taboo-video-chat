@@ -29,12 +29,18 @@ jobs:
           password: ${{secrets.REGISTRY_PASSWORD}}
 
       # Container build and push to a Azure Container Registry (ACR)
-      - run: |
+      - name: Build Docker image
+        run: |
           docker build . -t ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.APP_NAME }}:${{ github.sha }}
+        working-directory: ${{env.WORKING_DIRECTORY}}
+
+      - name: Push Docker image
+        run: |
           docker push ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.APP_NAME }}:${{ github.sha }}
         working-directory: ${{env.WORKING_DIRECTORY}}
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     env:
       ARM_CLIENT_ID: 07d58365-fc9b-4be3-b4cc-38e225e0148d
       ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
