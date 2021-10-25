@@ -32,9 +32,13 @@ kubectl apply -f ./k8/redis.yaml
 
 # Deploy the deployment and service to run the pod
 cat < ./k8/taboo-api.yaml | sed -e "s/{{envName}}/$env_name/g" -e "s/{{imageVersionTag}}/$api_image_tag_to_deploy/g" |  kubectl apply -f -
-kubectl scale deploy/taboo-api --replicas=0
-sleep 5
-kubectl scale deploy/taboo-api --replicas=1
+
+# Only change the scaling when latest tag is used
+if [[ "$api_image_tag_to_deploy" == "latest" ]]; then
+    kubectl scale deploy/taboo-api --replicas=0
+    sleep 5
+    kubectl scale deploy/taboo-api --replicas=1
+fi
 
 # Add ingress resource to be used by nginx-ingress for load balancing and public ip/dns
 kubectl apply -f ./k8/taboo-ingress.yaml
