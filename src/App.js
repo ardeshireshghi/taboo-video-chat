@@ -3,6 +3,7 @@ import Loader from './components/Loader';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'shards-ui/dist/css/shards.min.css';
+import './App.css';
 
 import { AuthProvider } from './context/AuthContext';
 import AppRouter from './router/AppRouter';
