@@ -41,8 +41,7 @@ const ChatNavContainer = () => {
   return (
     <ChatNavStyledContainer>
       <ChatNavTitle>Active chats</ChatNavTitle>
-      <ChatNav activeChats={userChats} />
-
+      {userChats.length > 0 && <ChatNav activeChats={userChats} />}
       {userChats.length === 0 && (
         <NoChatText>No active chats, choose a new topic</NoChatText>
       )}
